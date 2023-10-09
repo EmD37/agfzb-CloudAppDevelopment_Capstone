@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
@@ -7,6 +6,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
+from ./forms import ContactForm
 import logging
 import json
 
@@ -25,8 +25,15 @@ def about(request):
 
 # Create a `contact` view to return a static contact page
 def contact(request):
-    context = {}
-    return render(request, 'djangoapp/contact.html', context)
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            return redirect("get_dealerships")
+    else:
+        form = ContactForm()
+        return render(request, 'djangoapp/contact.html', {'form': form})
+
+
 
 # Create a `login_request` view to handle sign in request
 # def login_request(request):
