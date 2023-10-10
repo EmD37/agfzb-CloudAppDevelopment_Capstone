@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
-from ./forms import ContactForm
+from .forms import ContactForm
 import logging
 import json
 
@@ -28,12 +28,13 @@ def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            return redirect("get_dealerships")
+            return redirect("djangoapp:thanks")
     else:
         form = ContactForm()
         return render(request, 'djangoapp/contact.html', {'form': form})
 
-
+def thanks(request):
+    return render(request, 'djangoapp/thanks.html')
 
 # Create a `login_request` view to handle sign in request
 # def login_request(request):

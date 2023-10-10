@@ -10,6 +10,7 @@ urlpatterns = [
     # name the URL
     path(route='about', view=views.about, name='about'),
     path(route='contact', view=views.contact, name='contact'),
+    path(route='thanks', view=views.thanks, name='thanks'),
 
     # path for registration
 

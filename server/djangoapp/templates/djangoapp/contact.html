@@ -3,18 +3,33 @@
 {% block content %}
     <div class="container" style="padding-left: 15px; padding-top: 5px">
         <p>
-            <br>
-            is a world class online car dealership that can help you find the car you want at the best price possible. <br>
-            We were founded in 2023 by visionary car salesman Buster Dealman, best known from his extremely successful <br>
-            refridgerator consignment online business and website, WeSellFridges. <br>
-            <br>
-            Our website is precision engineered to bring you the most authentically intimidating car buying experience <br>
-            that technology can currently support! If you find that you aren't uncomfortable while browsing our listings,<br>
-            please don't hesitate to send us an email with your feedback!
+            Our corporate headquarters is located at:
         </p>
-        <h4>
+        <h5>
+            Suite 3B, Sales People Plaza <br>
+            39 Athernagaby Rd, Chester <br>
+            England, UK <br>
+            C14 49D <br>
             <br>
-            -The WeSellCars Team
-        </h4>
+            +44 8724 238910
+        </h5>
+        <br>
+        <p>
+            To get in touch with the WeSellCars team with questions or concerns, please use the form below and we will <br>
+            get back to you as soon as possible.
+        </p>
+        <br>
+        <div class="container" style="padding-left:20px">
+            <form action="./contact" method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="fieldWrapper">
+                        {{ field.errors }}
+                        {{ field.label_tag }} {{ field }}
+                    </div>
+                {% endfor %}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
     </div>
 {% endblock content %}
