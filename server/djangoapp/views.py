@@ -37,16 +37,29 @@ def thanks(request):
     return render(request, 'djangoapp/thanks.html')
 
 # Create a `login_request` view to handle sign in request
-# def login_request(request):
-# ...
+def login_request(request):
+    # Handles POST request
+    if request.method == "POST":
+        # Get username and password from request.POST dictionary
+        username = request.POST['username']
+        password = request.POST['password']
+        # Try to check if provide credential can be authenticated
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # If user is valid, call login method to login current user
+            login(request, user)
+        else:
+            # If not, return to login page again
+            messages.error(request, "Unable to authenticate user")
+    return render(request, 'djangoapp/index.html')w
 
 # Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+def logout_request(request):
+    return render(request, 'djangoapp/index.html')
 
 # Create a `registration_request` view to handle sign up request
-# def registration_request(request):
-# ...
+def registration_request(request):
+    return render(request, 'djangoapp/index.html')
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
@@ -63,3 +76,5 @@ def get_dealerships(request):
 # def add_review(request, dealer_id):
 # ...
 
+def get_user_profile(request):
+    return render(request, 'djangoapp/index.html')

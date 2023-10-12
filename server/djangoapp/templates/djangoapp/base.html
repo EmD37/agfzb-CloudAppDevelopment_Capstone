@@ -42,17 +42,25 @@
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <form action="./login" method="post">
-                            <input type="text" placeholder="username">
-                            <input type="password" placeholder="upassword">
-                            <input type="submit" value="Login">
+                        <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                            <input class="form-control" type="text" placeholder="username" name="username">
+                            <input class="form-control" type="password" placeholder="password" name="password">
+                            <input class="btn btn-primary" type="submit" value="Login">
                         </form>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'djangoapp:signup' %}">Sign Up</a>
                     </li>
                     {% endif %}
                 </ul>
             </div>
         </nav>
+        {% if messages %}
+            {% for message in messages %}
+            {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+            {% endfor %}
+        {% endif %}
+
         {% block content %}
         {% endblock content %}
     </body>
