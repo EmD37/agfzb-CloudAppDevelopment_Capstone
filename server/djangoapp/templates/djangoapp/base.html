@@ -35,7 +35,7 @@
                     </li class="nav-item">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'djangoapp:user' %}">{{ user.get_username }}</a>
+                        <a class="nav-link" href="#">{{ user.get_username }}</a>
                     </li>
                     <li>
                         <a class="nav-link" href="{% url 'djangoapp:logout' %}">Logout</a>
@@ -43,13 +43,14 @@
                     {% else %}
                     <li class="nav-item">
                         <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                        {% csrf_token %}
                             <input class="form-control" type="text" placeholder="username" name="username">
                             <input class="form-control" type="password" placeholder="password" name="password">
                             <input class="btn btn-primary" type="submit" value="Login">
                         </form>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'djangoapp:signup' %}">Sign Up</a>
+                        <a class="nav-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
                     </li>
                     {% endif %}
                 </ul>

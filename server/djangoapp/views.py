@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
-from .forms import ContactForm
+from .forms import ContactForm, SignupForm
 import logging
 import json
 
@@ -29,7 +29,7 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             return redirect("djangoapp:thanks")
-            
+
     form = ContactForm()
     return render(request, 'djangoapp/contact.html', {'form': form})
 
@@ -51,22 +51,44 @@ def login_request(request):
         else:
             # If not, return to login page again
             messages.error(request, "Unable to authenticate user")
-        return redirect(request.META['HTTP_REFERER'])
+        return redirect('djangoapp:index')
 
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
     logout(request)
-    return redirect(request.META['HTTP_REFERER'])
+    return redirect('djangoapp:index')
 
 # Create a `registration_request` view to handle sign up request
 def registration_request(request):
     if request.method == 'POST':
-        form = ContactForm(request.POST)
+        form = SignupForm(request.POST)
         if form.is_valid():
+            user_exists = False
+            username = request.POST['username']
+            password = request.POST['password']
+            first_name = request.POST['firstname']
+            last_name = request.POST['lastname']
+            email = request.POST['email']
+            try:
+            # Check if user already exists
+                User.objects.get(username=username)
+                user_exists = True
+            except:
+                logger.debug("{} is new user".format(username))
+            # If it is a new user
+            if not user_exists:
+                # Create user in auth_user table
+                user = User.objects.create_user(
+                    username=username, 
+                    first_name=first_name, 
+                    last_name=last_name,
+                    password=password, 
+                    email=email
+                )
                 return redirect("djangoapp:index") 
     
-    form = ContactForm()
-    return render(request, 'djangoapp/signup.html', {'form': form})
+    form = SignupForm()
+    return render(request, 'djangoapp/registration.html', {'form': form})
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):

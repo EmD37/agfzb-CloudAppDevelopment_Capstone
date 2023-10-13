@@ -7,15 +7,18 @@
 </head>
     <body>
         <div class="container" style="padding-left:20px">
-            <form action="{% url djangoapp:signup %}" method="post">
+            <h2>Register for WeSellCars</h2>
+            <hr>
+            <form action="{% url 'djangoapp:registration' %}" method="post">
                 {% csrf_token %}
                 {% for field in form %}
-                    <div class="fieldWrapper">
-                        {{ field.errors }}
-                        {{ field.label_tag }} {{ field }}
-                    </div>
+                    {{ field.label_tag }}
+                    {{ field.errors }} 
+                    {{ field }}
                 {% endfor %}
-                <input type="submit" value="Submit">
+                <br>
+                <input class="btn btn-success" type="submit" value="Register" style="padding-top: 5px">
+                <a class="btn btn-warning" href="{% url 'djangoapp:index' %}" style="padding-top: 5px">Cancel Registration</a>
             </form>
         </div>
     </body>
