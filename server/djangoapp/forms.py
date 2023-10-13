@@ -10,6 +10,7 @@ class ContactForm(forms.Form):
 
 class SignupForm(forms.Form):
     email = forms.CharField(max_length=100, widget=forms.EmailInput)
+    first_name = forms.CharField(max_length=100)
+    last_name = forms.CharField(max_length=100)
     username = forms.CharField(max_length=30)
     password = forms.CharField(max_length=50, widget=forms.PasswordInput)
-    password_repeat = forms.CharField(max_length=50, widget=forms.PasswordInput)

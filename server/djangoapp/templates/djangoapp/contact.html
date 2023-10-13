@@ -20,7 +20,7 @@
         </p>
         <br>
         <div class="container" style="padding-left:20px">
-            <form action="./contact" method="post">
+            <form action="{% url djangoapp:contact %}" method="post">
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="fieldWrapper">

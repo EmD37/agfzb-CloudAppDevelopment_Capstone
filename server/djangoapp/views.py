@@ -29,9 +29,9 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             return redirect("djangoapp:thanks")
-    else:
-        form = ContactForm()
-        return render(request, 'djangoapp/contact.html', {'form': form})
+            
+    form = ContactForm()
+    return render(request, 'djangoapp/contact.html', {'form': form})
 
 def thanks(request):
     return render(request, 'djangoapp/thanks.html')
@@ -51,15 +51,22 @@ def login_request(request):
         else:
             # If not, return to login page again
             messages.error(request, "Unable to authenticate user")
-    return render(request, 'djangoapp/index.html')w
+        return redirect(request.META['HTTP_REFERER'])
 
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
-    return render(request, 'djangoapp/index.html')
+    logout(request)
+    return redirect(request.META['HTTP_REFERER'])
 
 # Create a `registration_request` view to handle sign up request
 def registration_request(request):
-    return render(request, 'djangoapp/index.html')
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+                return redirect("djangoapp:index") 
+    
+    form = ContactForm()
+    return render(request, 'djangoapp/signup.html', {'form': form})
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
