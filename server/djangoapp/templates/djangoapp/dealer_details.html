@@ -2,14 +2,17 @@
 
 {% block content %}
 <div class="container" style="padding-left:25px; padding-top:25px">
-    <h2>Reviews for {{ dealer_name }}</h2>
+    <h2>Reviews for Dealership {{ dealer.full_name }}</h2>
     {% for review in reviews %}
         <div class="card">
             <div class="card-body" id="{{ review.id }}">
                 <ul>
-                    {% for field in review %}
-                        <li>{{ field }}</li>
-                    {% endfor %}
+                    <li>Reviewer: {{ review.name }}</li>
+                    <li>Dealership: {{ review.dealership }}</li>
+                    <li>Car: {{ review.car_year }} {{ review.car_make }} {{ review.car_model }}</li>
+                    <li>Purchase Date: {{ review.purchase_date }}</li>
+                    <li>Overall Sentiment: {{ review.sentiment }}</li>
+                    <li>Review: {{ review.review }}</li>
                 </ul>
             </div>
         </div>
