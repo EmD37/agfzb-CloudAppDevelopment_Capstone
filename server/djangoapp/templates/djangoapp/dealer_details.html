@@ -2,20 +2,30 @@
 
 {% block content %}
 <div class="container" style="padding-left:25px; padding-top:25px">
-    <h2>Reviews for Dealership {{ dealer.full_name }}</h2>
+    <h2>Reviews for {{ dealer.full_name }}</h2>
+    <div class="card-columns">
     {% for review in reviews %}
         <div class="card">
+            {% if review.sentiment == "positive" %}
+                <img class="card-img-left" height="50px" width="50px" src="{{MEDIA_URL}}/emoji/positive.png"></img>
+            {% elif review.sentiment == "negative" %}
+                <img class="card-img-left" height="50px" width="50px" src="{{MEDIA_URL}}/emoji/negative.png"></img>
+            {% else %}
+                <img class="card-img-left" height="50px" width="50px" src="{{MEDIA_URL}}/emoji/neutral.png"></img>
+            {% endif %}
             <div class="card-body" id="{{ review.id }}">
                 <ul>
                     <li>Reviewer: {{ review.name }}</li>
-                    <li>Dealership: {{ review.dealership }}</li>
                     <li>Car: {{ review.car_year }} {{ review.car_make }} {{ review.car_model }}</li>
                     <li>Purchase Date: {{ review.purchase_date }}</li>
-                    <li>Overall Sentiment: {{ review.sentiment }}</li>
                     <li>Review: {{ review.review }}</li>
                 </ul>
             </div>
         </div>
     {% endfor %}
+    </div>
+    {% if user.is_authenticated %}
+        <a class="btn btn-success" href="{% url 'djangoapp:add_review' dealer.id %}">Add a Review</a>
+    {% endif %}
 </div>
 {% endblock content %}

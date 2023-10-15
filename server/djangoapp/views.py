@@ -8,12 +8,15 @@ from django.contrib import messages
 from datetime import datetime
 from .forms import ContactForm, SignupForm
 from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf
+from .models import CarModel
 import logging
 import json
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+DEALERSHIP_URL = 'https://davismike37-3000.theiadocker-3-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get'
+REVIEW_URL_BASE = 'https://davismike37-5000.theiadocker-3-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/'
 
 # Create your views here.
 
@@ -93,24 +96,22 @@ def registration_request(request):
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     if request.method == "GET":
-        url = "https://davismike37-3000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+        url = DEALERSHIP_URL
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
-        # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
-        return render(request, 'djangoapp/index.html', {'dealer_names': dealer_names})
+        return render(request, 'djangoapp/index.html', {'dealerships': dealerships})
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
     if request.method == "GET":
         context = {}
-        url = "https://davismike37-3000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+        url = DEALERSHIP_URL
         dealer = get_dealer_by_id_from_cf(url, id=dealer_id)
         context["dealer"] = dealer
     
-        review_url = "https://davismike37-5000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews"
+        review_url = f"{REVIEW_URL_BASE}get_reviews"
         reviews = get_dealer_reviews_from_cf(review_url, dealerId=dealer_id)
         print(reviews)
         context["reviews"] = reviews
@@ -118,11 +119,11 @@ def get_dealer_details(request, dealer_id):
         return render(request, 'djangoapp/dealer_details.html', context)
 
 
-def add_review(request, id):
+def add_review(request, dealer_id):
     if request.user.is_authenticated:
         context = {}
-        dealer_url = "https://davismike37-3000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
-        dealer = get_dealer_by_id_from_cf(dealer_url, id)
+        dealer_url = DEALERSHIP_URL
+        dealer = get_dealer_by_id_from_cf(dealer_url, dealer_id)
         context["dealer"] = dealer
         if request.method == "GET":
             cars = CarModel.objects.all()
@@ -146,12 +147,11 @@ def add_review(request, id):
                 review["car_make"] = car.make.name
                 review["car_model"] = car.name
                 review["car_year"] = car.year
-            post_url = "https://davismike37-5000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
+            post_url = f"{REVIEW_URL_BASE}post_review"
             json_payload = { "review": review }
-            post_request(post_url, json_payload, id=id)
-            return redirect("djangoapp:dealer_details", id=id)
+            post_request(post_url, json_payload, dealer_id=dealer_id)
+            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
     else:
-        me
         return redirect('djangoapp:index')
 
 def get_user_profile(request):
